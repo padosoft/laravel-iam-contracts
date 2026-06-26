@@ -16,14 +16,14 @@ interface SecretCipher
     /**
      * Cifra un valore. `scope` permette DEK per-tenant (crypto-shredding).
      *
-     * @return array{ciphertext: string, wrapped_dek: string, key_id: string, key_version: int, scope: string|null}
+     * @return array{ciphertext: string, wrapped_dek: string|null, key_id: string, key_version: int, scope: string|null}
      */
     public function encrypt(string $plaintext, ?string $scope = null): array;
 
     /**
      * Decifra un valore precedentemente cifrato.
      *
-     * @param  array{ciphertext: string, wrapped_dek: string, key_id: string, key_version: int, scope: string|null}  $value
+     * @param  array{ciphertext: string, wrapped_dek: string|null, key_id: string, key_version: int, scope: string|null}  $value
      */
     public function decrypt(array $value): string;
 
