@@ -35,4 +35,13 @@ interface TokenSigner
 
     /** Ruota la chiave di firma (nuova attiva; la precedente resta in overlap). Ritorna il nuovo kid. */
     public function rotate(): string;
+
+    /**
+     * PEM pubblica della chiave attiva (per verifica esterna / placeholder di motori che
+     * richiedono una chiave valida ma a cui NON deleghiamo la firma). Garantisce l'esistenza
+     * di una chiave attiva. È materiale pubblico (già esposto nel JWKS).
+     *
+     * @return non-empty-string
+     */
+    public function verificationPem(): string;
 }
