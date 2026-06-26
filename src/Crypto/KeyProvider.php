@@ -25,7 +25,7 @@ interface KeyProvider
     /**
      * Scarta (decifra) una DEK precedentemente incartata.
      *
-     * @param array{ciphertext: string, key_id: string, key_version: int} $wrapped
+     * @param  array{ciphertext: string, key_id: string, key_version: int}  $wrapped
      */
     public function unwrapDataKey(array $wrapped): string;
 

@@ -22,7 +22,7 @@ interface AuthorizationEngine
      * Decisione deterministica allow/deny (+ explain, step-up, policy_version).
      *
      * @param  array<string, mixed>  $query  TODO(M2): DecisionQuery
-     * @return array<string, mixed>          TODO(M2): Decision
+     * @return array<string, mixed> TODO(M2): Decision
      */
     public function check(array $query): array;
 

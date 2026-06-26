@@ -23,7 +23,7 @@ interface SecretCipher
     /**
      * Decifra un valore precedentemente cifrato.
      *
-     * @param array{ciphertext: string, wrapped_dek: string, key_id: string, key_version: int, scope: string|null} $value
+     * @param  array{ciphertext: string, wrapped_dek: string, key_id: string, key_version: int, scope: string|null}  $value
      */
     public function decrypt(array $value): string;
 
