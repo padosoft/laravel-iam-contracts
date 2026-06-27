@@ -1,5 +1,6 @@
 ---
 title: Getting started
+description: Install laravel-iam-contracts and implement your first contract (engine, subject, assurance, feature scope).
 ---
 
 # Getting started

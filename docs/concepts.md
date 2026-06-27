@@ -1,5 +1,6 @@
 ---
 title: Concepts
+description: The mental model behind the contracts — PDP seam, subject references, crypto envelope, assurance levels, feature scopes.
 ---
 
 # Concepts

@@ -1,5 +1,6 @@
 ---
 title: Reference
+description: Every interface and value object shipped by laravel-iam-contracts, grouped by namespace, with signatures.
 ---
 
 # Reference
