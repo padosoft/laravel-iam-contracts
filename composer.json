@@ -6,6 +6,10 @@
     "require": {
         "php": "^8.3"
     },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18"
+    },
     "autoload": {
         "psr-4": {
             "Padosoft\\Iam\\Contracts\\": "src/"
@@ -15,6 +19,13 @@
         "branch-alias": {
             "dev-main": "0.1-dev"
         }
+    },
+    "scripts": {
+        "analyse": "phpstan analyse",
+        "lint": "pint"
+    },
+    "config": {
+        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true
