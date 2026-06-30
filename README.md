@@ -17,6 +17,10 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
 </p>
 
+<p align="center">
+  <strong><a href="https://doc.laravel-iam-contracts.padosoft.com">📚 Read the documentation →</a></strong>
+</p>
+
 ---
 
 ## Why this package
@@ -162,9 +166,17 @@ function maybeReview(FeatureScope $scope): void
 
 ## Documentation
 
-A docmd doc-site lives in [`docs/`](docs/): start at [`docs/index.md`](docs/index.md), then
-[Getting started](docs/getting-started.md), [Concepts](docs/concepts.md) and the full
-[Reference](docs/reference.md) of every interface and DTO.
+Full documentation is published at **[doc.laravel-iam-contracts.padosoft.com](https://doc.laravel-iam-contracts.padosoft.com)** —
+a complete reference of every interface and DTO, the design rationale for a contracts-only package, the
+ecosystem dependency graph, ADRs, and quickstarts for both implementing and consuming a contract.
+
+- [Quickstart](https://doc.laravel-iam-contracts.padosoft.com/quickstart) — implement your first contract.
+- [Why a contracts-only package](https://doc.laravel-iam-contracts.padosoft.com/concepts/why-contracts) — decoupling, independent releases, ABI stability.
+- [Ecosystem & dependencies](https://doc.laravel-iam-contracts.padosoft.com/architecture/overview) — who implements and consumes each contract.
+- [Contract reference](https://doc.laravel-iam-contracts.padosoft.com/reference/overview) — every interface and value object, with signatures.
+
+The site is generated with [docmd](https://docs.docmd.io); its sources live in [`docs-site/`](docs-site/).
+A short, repo-local copy of the docs also lives in [`docs/`](docs/).
 
 ## Security
 

@@ -1,7 +1,7 @@
 {
   "title": "Laravel IAM — Contracts",
   "description": "The shared contract layer of the Laravel IAM ecosystem: interfaces and immutable value objects every padosoft/laravel-iam-* package implements or consumes.",
-  "url": "https://padosoft.github.io/laravel-iam-contracts",
+  "url": "https://doc.laravel-iam-contracts.padosoft.com",
   "src": "docs",
   "out": "site",
   "base": "/",
@@ -29,7 +29,7 @@
   "plugins": {
     "search": {},
     "seo": { "titleTemplate": "%s | Laravel IAM Contracts" },
-    "sitemap": { "url": "https://padosoft.github.io/laravel-iam-contracts" },
+    "sitemap": { "url": "https://doc.laravel-iam-contracts.padosoft.com" },
     "git": { "repo": "https://github.com/padosoft/laravel-iam-contracts", "branch": "main", "editLink": true, "lastUpdated": true }
   }
 }

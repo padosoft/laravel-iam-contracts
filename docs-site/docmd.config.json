@@ -1,0 +1,133 @@
+{
+  "title": "laravel-iam-contracts",
+  "description": "Contratti (interfacce + DTO) condivisi di Laravel IAM: AuthorizationEngine/PDP, KeyProvider/SecretCipher, Assurance, FeatureScope.",
+  "url": "https://doc.laravel-iam-contracts.padosoft.com",
+  "src": "docs",
+  "out": "_site",
+  "base": "/",
+
+  "favicon": "assets/favicon.svg",
+  "theme": {
+    "name": "default",
+    "defaultMode": "dark",
+    "customCss": ["assets/custom.css"]
+  },
+
+  "autoTitleFromH1": true,
+  "copyCode": true,
+  "pageNavigation": true,
+  "minify": true,
+  "markdown": { "breaks": true },
+
+  "layout": {
+    "spa": true,
+    "header": { "enabled": true },
+    "sidebar": { "collapsible": true, "defaultCollapsed": false },
+    "optionsMenu": {
+      "position": "header",
+      "components": { "search": true, "themeSwitch": true }
+    }
+  },
+
+  "navigation": [
+    {
+      "title": "Get Started",
+      "icon": "rocket",
+      "children": [
+        { "title": "Introduction", "path": "/" },
+        { "title": "Quickstart", "path": "/quickstart" },
+        { "title": "Installation", "path": "/installation" }
+      ]
+    },
+    {
+      "title": "Concepts & Theory",
+      "icon": "square-function",
+      "children": [
+        { "title": "Why a contracts-only package", "path": "/concepts/why-contracts" },
+        { "title": "Ports & adapters", "path": "/concepts/ports-and-adapters" },
+        { "title": "Fail-closed by design", "path": "/concepts/fail-closed" }
+      ]
+    },
+    {
+      "title": "Architecture",
+      "icon": "workflow",
+      "children": [
+        { "title": "Ecosystem & dependencies", "path": "/architecture/overview" },
+        { "title": "Architecture decisions (ADR)", "path": "/architecture/decisions" },
+        { "title": "Versioning & ABI stability", "path": "/architecture/versioning" }
+      ]
+    },
+    {
+      "title": "Guides",
+      "icon": "book-open",
+      "children": [
+        { "title": "Implementing a contract", "path": "/guides/implementing-a-contract" },
+        { "title": "Consuming contracts", "path": "/guides/consuming-contracts" }
+      ]
+    },
+    {
+      "title": "Reference",
+      "icon": "book-marked",
+      "children": [
+        { "title": "Overview", "path": "/reference/overview" },
+        { "title": "Authorization", "path": "/reference/authorization" },
+        { "title": "Crypto", "path": "/reference/crypto" },
+        { "title": "Assurance", "path": "/reference/assurance" },
+        { "title": "Governance", "path": "/reference/governance" },
+        { "title": "Identity", "path": "/reference/identity" }
+      ]
+    },
+    {
+      "title": "Links",
+      "children": [
+        { "title": "GitHub", "path": "https://github.com/padosoft/laravel-iam-contracts", "external": true },
+        { "title": "Packagist", "path": "https://packagist.org/packages/padosoft/laravel-iam-contracts", "external": true }
+      ]
+    }
+  ],
+
+  "footer": {
+    "style": "minimal",
+    "branding": true,
+    "content": "© Lorenzo Padovani — [Padosoft](https://github.com/padosoft) · [GitHub](https://github.com/padosoft/laravel-iam-contracts) · MIT",
+    "columns": [
+      {
+        "title": "Project",
+        "links": [
+          { "title": "GitHub", "path": "https://github.com/padosoft/laravel-iam-contracts", "external": true },
+          { "title": "Packagist", "path": "https://packagist.org/packages/padosoft/laravel-iam-contracts", "external": true }
+        ]
+      },
+      {
+        "title": "Author",
+        "links": [
+          { "title": "Lorenzo Padovani", "path": "https://github.com/padosoft", "external": true },
+          { "title": "Padosoft", "path": "https://github.com/padosoft", "external": true }
+        ]
+      }
+    ]
+  },
+
+  "plugins": {
+    "search": { "enabled": true, "semantic": true, "placeholder": "Search the docs…" },
+    "git": {
+      "repo": "https://github.com/padosoft/laravel-iam-contracts",
+      "branch": "main",
+      "editLink": true,
+      "lastUpdated": true,
+      "commitHistory": true,
+      "dateFormat": "relative"
+    },
+    "seo": {
+      "defaultDescription": "Shared contracts (interfaces + DTOs) of the Laravel IAM ecosystem: AuthorizationEngine/PDP, KeyProvider/SecretCipher, Assurance, FeatureScope.",
+      "aiBots": true,
+      "openGraph": {},
+      "twitter": { "cardType": "summary_large_image" }
+    },
+    "sitemap": { "defaultChangefreq": "weekly", "defaultPriority": 0.8 },
+    "mermaid": {},
+    "math": {},
+    "llms": { "fullContext": true },
+    "analytics": { "enabled": false }
+  }
+}
