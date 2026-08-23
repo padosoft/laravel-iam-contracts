@@ -55,6 +55,11 @@ the local key provider for AWS KMS or an HSM, swap the passkey verifier for an e
   (layer → app → role → user).
 - **Identity** — `SessionRegistry` for revocable, server-side sessions (idle + absolute timeout,
   fail-closed) bound to tokens via a `sid`.
+- **Delegation (AI agents)** — the delegated-access contract layer: `ActorRef`/`DelegationChain` (the
+  RFC 8693 `act` chain), `DelegationGrant` (user-consented scopes + purpose + TTL), the token-exchange
+  DTOs, `DelegationContext` for "who did what on behalf of whom" observability, and
+  `DelegatedAuthorizationEngine` — the **intersection PDP**: effective authority = user ∩ agent, never
+  the union, fail-closed.
 - **Zero runtime dependencies** — `require` is `php` only. Installs anywhere, drags nothing in.
 
 ## Use cases
@@ -161,6 +166,7 @@ function maybeReview(FeatureScope $scope): void
 | [laravel-iam-server](https://github.com/padosoft/laravel-iam-server) | The IAM server: identity, PDP (RBAC+ABAC+ReBAC), OAuth/OIDC, audit, governance, Admin API & panel |
 | [laravel-iam-client](https://github.com/padosoft/laravel-iam-client) | Client for apps consuming Laravel IAM: OIDC login, JWT/JWKS, middleware, Gate adapter |
 | [laravel-iam-ai](https://github.com/padosoft/laravel-iam-ai) | Optional AI module: advisory-only governance (redaction + hallucination guard + audit) |
+| [laravel-iam-agents](https://github.com/padosoft/laravel-iam-agents) | Optional agents module: delegated access for AI agents — agent registry, consented grants, RFC 8693 token exchange, intersection PDP |
 | [laravel-iam-directory](https://github.com/padosoft/laravel-iam-directory) | Optional directory module: LDAP / Active Directory (LdapRecord); SCIM in v2 |
 | [laravel-iam-bridge-spatie-permission](https://github.com/padosoft/laravel-iam-bridge-spatie-permission) | Migration bridge from spatie/laravel-permission: scan, shadow mode, decision diffing, cutover |
 

@@ -58,3 +58,23 @@
 - **Fail-closed anche nei contratti.** Le firme lo codificano: `SessionRegistry::active()` documenta
   "Fail-closed" (sessione sconosciuta/scaduta → `false`), `AssuranceProvider::currentAal()` ritorna `AAL1`
   se la sessione non è attiva. Mantieni questa semantica quando estendi le interfacce.
+
+## Delegation contracts (task/delegation-contracts, 2026-08-23)
+
+- **Nuovo namespace `Delegation\`** per il delegated access degli AI agents (RFC 8693 + claim `act` +
+  intersection rule). Regola rispettata: NESSUN metodo aggiunto a interfacce esistenti —
+  `DelegatedAuthorizationEngine` è un'interfaccia NUOVA che estende `AuthorizationEngine`.
+- **Collisione di naming evitata**: `FeatureScope` usa `$actor` nel senso "chiamante corrente"; nel
+  namespace Delegation "actor" è nel senso OAuth del claim `act` (l'agente). Documentato nei docblock di
+  `ActorRef` per i futuri lettori.
+- **Fail-closed nel parsing**: `DelegationChain::fromTokenClaims()` ritorna `null` SOLO se il claim `act`
+  è assente; un claim presente ma malformato LANCIA. Il degrado silenzioso di un token delegato a "token
+  utente pieno" è esattamente il confused-deputy che il namespace esiste per prevenire.
+- **Chiavi di log redaction-safe**: `DelegationContext::toLogContext()` non usa mai la substring `token`
+  nelle chiavi (le admin API redigono per substring: `grant_id`, mai `grant_token`).
+- **Costanti tipizzate** (`public const string`) richiedono PHP 8.3 — coerente col `require` del package.
+- **Stile Pint del repo**: `!is_array(...)` SENZA spazio dopo `!` (`unary_operator_spaces`), diverso dal
+  default Laravel — far girare sempre `pint` prima del commit.
+- **Tooling in ambienti senza accesso a api.github.com**: `composer install` fallisce sui dist zipball
+  (403). Workaround: `--prefer-source` per le lib clonabili + phar diretti per i tool (`laravel/pint` ha
+  `builds/pint` committato nel repo git; `phpstan/phpstan` è il repo di distribuzione del phar).

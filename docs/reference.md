@@ -265,3 +265,68 @@ final readonly class SessionMeta {
     ) {}
 }
 ```
+
+---
+
+## Delegation
+
+Delegated access for AI agents (RFC 8693 Token Exchange + `act` claim). An agent never holds the user's
+token; the effective authority of a delegated call is the **strict intersection** of the user's and the
+agent's permissions — never the union, fail-closed. Implemented by `laravel-iam-agents` (registry, grants,
+consent, exchange grant) and `laravel-iam-server` (intersection engine decorator).
+
+### `ActorRef`
+
+`final readonly class ActorRef implements \Stringable` — the acting agent. Wraps a `SubjectRef` and
+**enforces** `type === 'agent'` (throws otherwise). `fromActClaim(array $act): ?self` parses one `act`
+level (`{"sub":"agent:…"}`).
+
+### `DelegationChain`
+
+`final readonly class DelegationChain` — ordered actor chain, current actor first (RFC 8693 §4.1 nested
+`act`). `toActClaim()` serializes the nested claim; `fromTokenClaims()` returns `null` when no `act` claim
+is present and **throws** on a malformed one (a delegated token never degrades to full-user authority).
+
+### `DelegationGrant` / `DelegationGrantStatus`
+
+The user's consented delegation: agent, scopes, human-readable `purpose`, expiry, status
+(`Active|Suspended|Expired|Revoked`), plus the step-up consent evidence (`consentConfirmationId`,
+`consentAal`). `isUsableAt(now)` = Active and not expired. The grant id travels in tokens as the private
+claim `pds_dgr` (targeted revocation).
+
+### `AgentDescriptor` / `AgentStatus` / `AgentRegistry`
+
+Agents are first-class identities with a triple-identity model: `operator` (provider), agent instance
+(`subject`, type `agent`), delegating user (in the grant). `maxScopes` is the manifest-derived ceiling.
+`AgentStatus::Pending` is where agentic registrations (gated DCR / auth.md) land — `Active` only through
+human approval. `AgentRegistry::find()` returns `null` for unknown agents ⇒ deny downstream.
+
+### `DelegationGrantStore`
+
+`findActive(user, agent)`, `find(grantId)` (per-decision `pds_dgr` lookup), `listFor(user)`
+(self-service), `revoke(grantId, revokedBy)` (idempotent, audited).
+
+### `TokenExchanger` / `TokenExchangeRequest` / `TokenExchangeResult`
+
+Client side of RFC 8693: the agent authenticates with its own `private_key_jwt` and presents the user's
+token as `subject_token`. The issued token is short-lived, carries `sub`+`act`+`pds_dgr`, and is **not
+refreshable by design** — re-exchange is the revocation freshness check. `scopes` in the result is always
+explicit.
+
+### `ActClaim`
+
+Protocol constants: `act`, the RFC 8693 grant-type/token-type URNs (incl. `id-jag` for auth.md interop),
+the private claim `pds_dgr`, the dedicated `typ` header `delegated+jwt`.
+
+### `DelegationContext`
+
+Cross-cutting observability VO (`sub`, chain, grant id, decision id, correlation id) hydrated once and
+propagated via Laravel Context so every log/audit record answers "who did what, on behalf of whom".
+`toLogContext()` uses stable, redaction-safe keys (no `token` substring).
+
+### `DelegatedAuthorizationEngine`
+
+`interface DelegatedAuthorizationEngine extends AuthorizationEngine` — the intersection PDP:
+`checkDelegated(SubjectRef $subject, DelegationChain $chain, array $query): array`. Two `check()` passes
+(user, agent) plus the grant being active; compound deny-overrides; the decision cites both subjects.
+New interface by design ("add, don't mutate").

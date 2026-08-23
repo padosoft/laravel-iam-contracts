@@ -20,6 +20,7 @@ flowchart TB
     ROOT --> ASR["Assurance\\\\ — Aal, AssuranceProvider, StepUpProvider, FactorVerifier, + DTOs"]
     ROOT --> GOV["Governance\\\\ — FeatureScope, FeatureKey, ScopeLevel, FeatureContext"]
     ROOT --> IDN["Identity\\\\ — SessionRegistry, SessionRef, SessionMeta"]
+    ROOT --> DEL["Delegation\\\\ — ActorRef, DelegationChain, DelegationGrant, TokenExchanger, DelegatedAuthorizationEngine"]
 ```
 
 ## Everything at a glance
@@ -45,6 +46,20 @@ flowchart TB
 | `SessionRegistry` | interface | `Identity` | revocable server-side sessions | [Identity](/reference/identity) |
 | `SessionRef` | `final readonly` (Stringable) | `Identity` | wraps the `sid` binding tokens to a session | [Identity](/reference/identity) |
 | `SessionMeta` | `final readonly` | `Identity` | metadata a session opens with | [Identity](/reference/identity) |
+| `ActorRef` | `final readonly` (Stringable) | `Delegation` | the acting agent of a delegation (`act` sense) | [Delegation](/reference/delegation) |
+| `DelegationChain` | `final readonly` | `Delegation` | ordered actor chain, RFC 8693 nested `act` | [Delegation](/reference/delegation) |
+| `DelegationGrant` | `final readonly` | `Delegation` | the user's consented delegation (scopes, purpose, TTL) | [Delegation](/reference/delegation) |
+| `DelegationGrantStatus` | enum `string` | `Delegation` | Active/Suspended/Expired/Revoked (fail-closed) | [Delegation](/reference/delegation) |
+| `AgentDescriptor` | `final readonly` | `Delegation` | registered agent: operator, owner, max scopes, status | [Delegation](/reference/delegation) |
+| `AgentStatus` | enum `string` | `Delegation` | Pending/Active/Suspended/Retired lifecycle | [Delegation](/reference/delegation) |
+| `AgentRegistry` | interface | `Delegation` | lookup of registered agents | [Delegation](/reference/delegation) |
+| `DelegationGrantStore` | interface | `Delegation` | persistence of consented delegations | [Delegation](/reference/delegation) |
+| `TokenExchanger` | interface | `Delegation` | client side of RFC 8693 token exchange | [Delegation](/reference/delegation) |
+| `TokenExchangeRequest` | `final readonly` | `Delegation` | RFC 8693 §2.1 request DTO | [Delegation](/reference/delegation) |
+| `TokenExchangeResult` | `final readonly` | `Delegation` | RFC 8693 §2.2 response DTO | [Delegation](/reference/delegation) |
+| `ActClaim` | `final` constants | `Delegation` | `act`, grant/token-type URNs, `pds_dgr`, `delegated+jwt` | [Delegation](/reference/delegation) |
+| `DelegationContext` | `final readonly` | `Delegation` | cross-cutting observability context (sub+chain+grant) | [Delegation](/reference/delegation) |
+| `DelegatedAuthorizationEngine` | interface | `Delegation` | intersection PDP (user ∩ agent), extends the engine | [Delegation](/reference/delegation) |
 
 ## Reading the reference
 
@@ -70,3 +85,4 @@ couple to.
 - [Assurance](/reference/assurance) — `Aal` & the step-up family
 - [Governance](/reference/governance) — `FeatureScope` & the IGA primitive
 - [Identity](/reference/identity) — `SessionRegistry`, `SessionRef`, `SessionMeta`
+- [Delegation](/reference/delegation) — delegated access for AI agents: `ActorRef`, `DelegationChain`, `DelegationGrant`, token exchange (RFC 8693), `DelegatedAuthorizationEngine`
