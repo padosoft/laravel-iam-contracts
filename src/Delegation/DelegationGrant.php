@@ -35,6 +35,9 @@ final readonly class DelegationGrant
         public ?Aal $consentAal = null,
         public ?\DateTimeImmutable $revokedAt = null,
         public ?SubjectRef $revokedBy = null,
+        // Nuovi parametri SEMPRE in coda con default (lezione flow v2.2.1: i costruttori
+        // posizionali dei consumer non devono rompersi).
+        public ?DelegationBudget $budget = null,
     ) {}
 
     /** La grant autorizza la delega ADESSO (stato attivo e non scaduta). Fail-closed. */
