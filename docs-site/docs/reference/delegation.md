@@ -11,7 +11,8 @@ down-scoped token carrying **both identities** (`sub` = user, `act` = agent), an
 decision is the **strict intersection** of what the user may do and what the agent may do. Never the union.
 
 These contracts are implemented by [`laravel-iam-agents`](https://github.com/padosoft/laravel-iam-agents)
-(agent registry, delegation grants, consent, the token-exchange grant) and by `laravel-iam-server`
+(agent registry, delegation grants, consent, the token-exchange grant — full docs at
+[doc.laravel-iam-agents.padosoft.com](https://doc.laravel-iam-agents.padosoft.com)) and by `laravel-iam-server`
 (the `DelegatedAuthorizationEngine` decorator); they are consumed by the PEP SDKs and by agent runtimes
 such as `laravel-flow-ai`.
 
