@@ -78,10 +78,14 @@ public function __construct(
     public ?Aal $consentAal = null,
     public ?\DateTimeImmutable $revokedAt = null,
     public ?SubjectRef $revokedBy = null,
+    public ?DelegationBudget $budget = null,     // v1.4: scopes bound authority, budgets bound intensity
 ) {}
 
 public function isUsableAt(\DateTimeImmutable $now): bool;   // Active AND not expired
 ```
+
+New constructor parameters are always appended **after** the existing ones with a default — positional
+consumers keep working across minor versions.
 
 ## `AgentDescriptor` / `AgentStatus` / `AgentRegistry`
 
@@ -163,6 +167,77 @@ interface TokenExchanger
     public function exchange(TokenExchangeRequest $request): TokenExchangeResult;
 }
 ```
+
+## Budget & intensity — `DelegationBudget`, `BudgetVerdict`, `DelegationBudgetGuard`
+
+*(v1.4)* Scopes bound **authority** (what the agent may do); a budget bounds **intensity** (how much
+it may do it). `DelegationBudget` is part of the consent — when present it enters the dynamic-linking
+binding exactly like agent/scopes/ttl/purpose:
+
+```php
+final readonly class DelegationBudget {
+    public function __construct(
+        public ?float $amount = null,   // max spend in `currency`
+        public string $currency = 'EUR',
+        public ?int $tokens = null,     // max LLM tokens
+        public ?int $calls = null,      // max calls / tool invocations
+    );                                   // at least one cap required; caps must be positive
+    public function toArray(): array;    // canonical: sorted keys, only present caps
+    public static function fromArray(array $data): self;
+}
+
+interface DelegationBudgetGuard {        // reference implementation: laravel-ai-finops
+    public function verdict(DelegationGrant $grant): BudgetVerdict;
+}
+
+final readonly class BudgetVerdict {
+    public static function allow(array $remaining = []): self;
+    public static function deny(string $reason, array $remaining = []): self;  // reason mandatory
+}
+```
+
+**Fail-closed contract for callers** (the token-exchange grant honours this): a grant **with** a
+budget in a deployment **without** a bound guard is unenforceable ⇒ the exchange is refused. Grants
+without a budget never consult the guard.
+
+## JIT elevation — `ElevationRequest`, `ElevationNotifier`
+
+*(v1.4)* When an agent hits an action outside its grant, the runtime can ask the delegating user to
+extend the consent instead of dead-ending on a deny:
+
+```php
+final readonly class ElevationRequest {
+    public function __construct(
+        public string $id, public string $grantId,
+        public SubjectRef $user, public SubjectRef $agent, public string $agentName,
+        public array $requestedScopes,           // non-empty list<string>
+        public string $reason,                    // mandatory: the user must understand the ask
+        public \DateTimeImmutable $expiresAt,    // pending window — expires fail-closed
+    );
+}
+
+interface ElevationNotifier {                     // reference implementation: laravel-rebel-channels
+    /** @throws \Throwable when delivery fails on every configured channel */
+    public function notify(ElevationRequest $request): void;
+}
+```
+
+The notifier only **informs** — approval always goes through the step-up consent flow (dynamic
+linking over the extra scopes), never through an in-channel "approve".
+
+## `AgentLifecycle`
+
+*(v1.4)* Lifecycle transitions invocable by security components (reference consumer:
+`laravel-rebel-ai-guard` auto-suspend on delegation-stream anomalies):
+
+```php
+interface AgentLifecycle {
+    public function suspend(SubjectRef $agent, string $reason, string $actor): void;  // idempotent
+}
+```
+
+Deliberately **suspend-only** (re-activation is a human decision) and **separate from
+`AgentRegistry`** (add, don't mutate): read-only consumers never receive the capability to suspend.
 
 ## `ActClaim`
 
