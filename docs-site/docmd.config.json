@@ -74,7 +74,8 @@
         { "title": "Crypto", "path": "/reference/crypto" },
         { "title": "Assurance", "path": "/reference/assurance" },
         { "title": "Governance", "path": "/reference/governance" },
-        { "title": "Identity", "path": "/reference/identity" }
+        { "title": "Identity", "path": "/reference/identity" },
+        { "title": "Delegation", "path": "/reference/delegation" }
       ]
     },
     {
