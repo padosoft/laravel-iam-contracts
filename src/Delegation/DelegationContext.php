@@ -30,7 +30,36 @@ final readonly class DelegationContext
         public ?string $correlationId = null,
         public ?string $audience = null,
         public array $scopes = [],
+        // Id del run dell'SDK AI (laravel/ai 0.11+ lo propaga su ogni evento di
+        // step e di tool). È la chiave di join che mancava: senza, un record di
+        // finops o di eval si correla al run solo per approssimazione temporale.
+        public ?string $invocationId = null,
+        // L'hop precedente quando un agente è usato come tool di un altro: la
+        // stessa relazione padre→figlio della catena `act`, vista dal runtime.
+        public ?string $parentInvocationId = null,
     ) {}
+
+    /**
+     * Copia con l'attribuzione del run dell'SDK AI.
+     *
+     * Il contesto di delega nasce all'ingresso HTTP/job, quando nessun run è
+     * ancora partito; l'invocation id esiste solo dopo. Questo è il punto in cui
+     * il runtime AI arricchisce il contesto ambientale senza ricostruirlo.
+     */
+    public function withInvocation(string $invocationId, ?string $parentInvocationId = null): self
+    {
+        return new self(
+            sub: $this->sub,
+            chain: $this->chain,
+            grantId: $this->grantId,
+            decisionId: $this->decisionId,
+            correlationId: $this->correlationId,
+            audience: $this->audience,
+            scopes: $this->scopes,
+            invocationId: $invocationId,
+            parentInvocationId: $parentInvocationId,
+        );
+    }
 
     /**
      * Shape piatta per log/audit context. Chiavi stabili: fanno parte del contratto
@@ -45,6 +74,8 @@ final readonly class DelegationContext
      *     delegation_grant_id: ?string,
      *     delegation_decision_id: ?string,
      *     correlation_id: ?string,
+     *     invocation_id: ?string,
+     *     parent_invocation_id: ?string,
      * }
      */
     public function toLogContext(): array
@@ -57,6 +88,8 @@ final readonly class DelegationContext
             'delegation_grant_id' => $this->grantId,
             'delegation_decision_id' => $this->decisionId,
             'correlation_id' => $this->correlationId,
+            'invocation_id' => $this->invocationId,
+            'parent_invocation_id' => $this->parentInvocationId,
         ];
     }
 }
