@@ -57,7 +57,9 @@ the local key provider for AWS KMS or an HSM, swap the passkey verifier for an e
   fail-closed) bound to tokens via a `sid`.
 - **Delegation (AI agents)** — the delegated-access contract layer: `ActorRef`/`DelegationChain` (the
   RFC 8693 `act` chain), `DelegationGrant` (user-consented scopes + purpose + TTL), the token-exchange
-  DTOs, `DelegationContext` for "who did what on behalf of whom" observability, and
+  DTOs, `DelegationContext` for "who did what on behalf of whom" observability — now also *on which
+  piece of work*, carrying the AI run's `invocationId` and the parent run when one agent executes as
+  another's tool (`laravel/ai` 0.11+, both optional, no dependency added here) — and
   `DelegatedAuthorizationEngine` — the **intersection PDP**: effective authority = user ∩ agent, never
   the union, fail-closed.
 - **Zero runtime dependencies** — `require` is `php` only. Installs anywhere, drags nothing in.
