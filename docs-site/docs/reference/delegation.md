@@ -255,6 +255,26 @@ The cross-cutting observability VO: *who* (`sub`), *through whom* (`chain`), *un
 Laravel Context so **every** log and audit record in any package answers "who did what, on behalf of
 whom". `toLogContext()` returns stable, redaction-safe keys (no key contains the substring `token`).
 
+Since `laravel/ai` **0.11** it also carries *which piece of work*: `invocationId` names the AI run the
+record belongs to, and `parentInvocationId` names the run that delegated to it when an agent executed
+as another agent's tool — the same parent→child shape as a nested `act` claim, observed from the
+runtime instead of from the token. Both are optional trailing parameters, and `withInvocation()`
+returns a copy carrying them, so a context built before this existed is unchanged and an application
+with no SDK never gains empty keys.
+
+Correlating by timestamp was the alternative, and it fails exactly when it matters: two agent runs
+overlapping is precisely the situation you are investigating.
+
+```php
+$context = $context->withInvocation('inv_01K2...', parentInvocationId: 'inv_01K1...');
+
+$context->toLogContext();
+// [..., 'invocation_id' => 'inv_01K2...', 'parent_invocation_id' => 'inv_01K1...']
+```
+
+Stamping is `laravel-iam-agents`' job (it listens to the SDK's step events); this package only
+defines the shape, and takes **no** dependency on `laravel/ai`.
+
 ## `DelegatedAuthorizationEngine`
 
 `interface DelegatedAuthorizationEngine extends AuthorizationEngine`
